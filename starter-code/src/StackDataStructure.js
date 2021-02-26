@@ -1,31 +1,37 @@
-function StackDataStructure () {
+class StackDataStructure {
+  constructor(){
   this.stackControl = [];
-  this.MAX_SIZE = 8;
+  this.MAX_SIZE = 10;
+}
 
-  this.isEmpty = function () {
-    return this.stackControl.length === 0;
+  display = () => {
+    return this.stackControl;
+  }
+
+  isEmpty = () => {
+    if (this.stackControl.length > 0) return false;
+    return true;
   };
 
-  this.canPush = function () {
-    return this.stackControl.length < this.MAX_SIZE;
+  canPush = () => {
+    if (this.stackControl.length === this.MAX_SIZE) return false;
+    return true;
   };
 
-  this.push = function (stackElement) {
+  push = (item) => {
     if(this.canPush()){
-      this.stackControl.push(stackElement)
+      this.stackControl.push(item)
       return this.stackControl
     } else {
       return "Stack Overflow"
     }
-
   };
 
-  this.pop = function (stackElement) {
-    if(this.isEmpty()) {
-      return "Stack Underflow"
+  pop = () => {
+    if (this.stackControl.length === 0) {
+      return 'Stack Underflow';
     } else {
-      return this.stackControl.pop(stackElement)
+      return this.stackControl.pop();
     }
-
-  };
+  }
 }

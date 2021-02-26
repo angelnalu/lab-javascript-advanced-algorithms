@@ -1,34 +1,68 @@
-let input = document.getElementById("input");
-let Buttons = document.getElementsByTagName("button");
-let stackElements = document.getElementsByClassName("stack-element");
-let addButton = Buttons[0];
-let takeButton = Buttons[1];
-let stack = new StackDataStructure();
-let index = stack.MAX_SIZE-1;
-let indexOut = 4;
-let overFlowDiv = document.getElementById('stack-overflow');
+const stackSize = 10;
+const newStack = new StackDataStructure(stackSize);
+
+const stackList = document.getElementById('stack-list');
+const stackInput = document.getElementById('stack-input');
+const container = document.getElementById('container');
+const warningTopStack = document.querySelector('#stack-container .warning-top');
+const warningBottomStack = document.querySelector('#stack-container .warning-bottom');
+const addStackBtn = document.getElementById('add-stack');
+const takeStackBtn = document.getElementById('take-stack');
 
 
-function addElement(){
-  if(stack.canPush()){
-  console.log(input.value,index);
-  stack.push(input.value);
-  stackElements[index].innerText = stack.pop();
-  index--;
-}else{
-  overFlowDiv.innerHTML = stack.push();
-}
-}
 
-function takeElement(){
-  console.log(stack)
-  stack.stackControl.pop();
-  //index = 0;  
-  for(let i=0; i<stack.stackControl.length;i++) {
-    console.log(indexOut,stack.stackControl[i]);
-    stackElements[indexOut].innerText = stack.stackControl[i];
-    indexOut--;
+const clearStackInput = () => {
+  stackInput.value = '';
+};
+
+const renderListStack = () => {
+  warningTopStack.style.display = 'none';
+  warningBottomStack.style.display = 'none';
+  stackList.innerHTML = '';
+  let length = newStack.display().length;
+  let size = stackSize - length;
+  newStack.display().forEach(item => {
+  let li = document.createElement('li');
+  li.className = 'active';
+  li.innerText = item;
+  stackList.appendChild(li);
+  });
+  for (let i = 0; i < size; i++) {
+    let li = document.createElement('li');
+    li.className = 'inactive';
+    li.innerHTML = '&nbsp;';
+    stackList.appendChild(li);
   }
-    indexOut--;
+};
 
-}
+renderListStack();
+
+const generateWarningStack = type => {
+  if (type === 'underflow') {
+    warningBottomStack.style.display = 'block';
+    warningBottomStack.innerText = type;
+  } else if (type === 'overflow') {
+    warningTopStack.style.display = 'block';
+    warningTopStack.innerText = type;
+  }
+};
+
+const addToStack = () => {
+  if (newStack.push(stackInput.value) === 'Stack Overflow') {
+    generateWarningStack('overflow');
+  } else {
+    clearStackInput();
+    renderListStack();
+  }
+};
+
+const removeFromStack = () => {
+  if (newStack.pop() === 'Stack Underflow') {
+    generateWarningStack('underflow');
+  } else {
+    renderListStack();
+  }
+};
+
+addStackBtn.addEventListener('click', addToStack);
+takeStackBtn.addEventListener('click', removeFromStack);
